@@ -1,5 +1,6 @@
 from scipy.fftpack import dct
 import numpy as np
+from matplotlib import pyplot as plt
 
 def pre_emphasis(sig):
     """
@@ -18,9 +19,9 @@ def framing(sig,fs,frame_len_s=0.025,frame_shift_s=0.01):
     para：
         frame_len_s:每一帧的长度,单位为s
         frame_shift_s:分帧的shift,单位为s
-        fs：采样率
+        fs：采样率，hz
         sig：要进行分帧的音频信号
-    return：进行分帧后的数据
+    return：进行分帧后的数据，一个二维list，一个元素是一帧信号
     """
     sig_n=len(sig)
     frame_len_n=int(round(fs*frame_len_s))
@@ -249,4 +250,44 @@ def bark_filter_banks(nfilts=20, nfft=512, fs=16000, low_freq=0, high_freq=None,
             fbank[i, j] = c * Fm(fb, fc)
     return np.abs(fbank)
 
+def plot_time(sig, fs,png_name):
+    """
+    绘制时域图
+    """
+    time = np.arange(0, len(sig)) * (1.0 / fs)
+    plt.figure(figsize=(10, 5))
+    plt.plot(time, sig)
+    plt.xlabel('Time(s)')
+    plt.ylabel('Amplitude')
+    plt.grid()
+    plt.savefig(png_name)
+    plt.show()
+
+def plot_freq(sig, sample_rate, png_name,nfft=512):
+    """
+    绘制频域图
+    """
+    xf = np.fft.rfft(sig, nfft) / nfft
+    freqs = np.linspace(0, int(sample_rate/2), int(nfft/2 + 1))
+    xfp = 20 * np.log10(np.clip(np.abs(xf), 1e-20, 1e100))
+    plt.figure(figsize=(10, 5))
+    plt.plot(freqs, xfp)
+    plt.xlabel('Freq(hz)')
+    plt.ylabel('dB')
+    plt.grid()
+    plt.savefig(png_name)
+    plt.show()
+
+def plot_spectrogram(spec, ylabel,png_name):
+    """
+    绘制二维数组
+    """
+    fig = plt.figure(figsize=(10, 5))
+    heatmap = plt.pcolor(spec)
+    fig.colorbar(mappable=heatmap)
+    plt.xlabel('Time(s)')
+    plt.ylabel(ylabel)
+    plt.tight_layout()
+    plt.savefig(png_name)
+    plt.show()
 # 读取音频文件，可参考librosa，soundfile，wavefile包的使用

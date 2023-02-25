@@ -1,14 +1,10 @@
-# import wavfile
-from scipy.io import wavfile # 注意使用的包的来源不一样也会有很大的影响
 from scipy.fftpack import dct
 import numpy as np
-from matplotlib import pyplot as plt
-# 每种特征抽取之后进行可视化
+
 def pre_emphasis(sig):
     """
     function:预加重
-    para:
-        sig:要进行处理的音频数据
+    para: sig:要进行处理的音频数据
     return 进行加强处理后的音频数据
     """
     preemphasis=0.97
@@ -29,11 +25,11 @@ def framing(sig,fs,frame_len_s=0.025,frame_shift_s=0.01):
     sig_n=len(sig)
     frame_len_n=int(round(fs*frame_len_s))
     frame_shift_n=int(round(fs*frame_shift_s))
-    num_frame=int(np.ceil(float(sig_n-frame_len_n)/frame_shift_n)+1) # 这一句为啥是这么算呢？
+    num_frame=int(np.ceil(float(sig_n-frame_len_n)/frame_shift_n)+1) 
     pad_num=frame_shift_n*(num_frame-1)+frame_len_n-sig_n # 待补0的个数
     # 一种前后向拼接array的方法-------------
     pad_zero=np.zeros(int(pad_num)) 
-    pad_sig=np.append(sig,pad_zero)
+    pad_sig=np.append(sig,pad_zero) 
     #-------------------------------------
     # 计算下标：
     frame_inner_index=np.arange(0,frame_len_n)
@@ -53,7 +49,7 @@ def add_window(frame_sig,fs,frame_len_s=0.025):
     """
     function：加窗
     para：
-        frame_len_s：
+        frame_len_s：每一帧的长度,单位为s
         fs：采样率
         frame_sig:进行分帧后的数据
     return：加窗后的数据
@@ -65,12 +61,11 @@ def add_window(frame_sig,fs,frame_len_s=0.025):
 def my_fft(frame_sig):
     """
     function：傅里叶变换
-    para:
-        frame_sig：进行加窗处理后的数据
+    para:frame_sig：进行加窗处理后的数据
     return：进行傅里叶变换后的数据
     """
     NFFT=512 # NFFT常为256或512
-    mag_frames = np.absolute(np.fft.rfft(frame_sig, NFFT)) # frame_sig 分帧之后每一帧的信号
+    mag_frames = np.absolute(np.fft.rfft(frame_sig, NFFT)) 
     return mag_frames   
 
 def stft(frame_sig, nfft=512):    
@@ -125,13 +120,13 @@ def mel_filter(frame_pow, fs, n_filter=40, nfft=512):
     # [num_frame, nfft/2 + 1] * [nfft/2 + 1, n_filter] = [num_frame, n_filter]
     filter_banks = np.dot(frame_pow, fbank.T)
     filter_banks = np.where(filter_banks == 0, np.finfo(float).eps, filter_banks)
+    # np.finfo函数是根据括号中的类型来获得信息，获得符合这个类型的数型, eps是取非负的最小值
     return filter_banks
 
 def log_pow(filter_banks):
     """
     function：功率取对数
-    para：
-        filter_banks:经过mel滤波器的数据
+    para：filter_banks:经过mel滤波器的数据
     return：取对数后的功率数据，即fbank
     """
     # 取对数 (功率取对数)
@@ -154,9 +149,8 @@ def discrete_cosine_transform(filter_banks):
 def hz2bark(f):
     """ 
     function:Hz to bark频率 (Wang, Sekey & Gersho, 1992.) 
-    para:
-        f：要进行转换的频率
-    return:
+    para: f：要进行转换的频率
+    return: 转换后的bark频率
     """
     return 6. * np.arcsinh(f / 600.)
 
@@ -164,7 +158,7 @@ def bark2hz(fb):
     """ 
     function:Bark频率 to Hz
     para:fb
-    return:
+    return: 转换后的赫兹频率
     """
     return 600. * np.sinh(fb / 6.)
 
@@ -174,7 +168,7 @@ def bark2fft(fb, fs=16000, nfft=512):
     para:   
         fb
         fs:采样率
-        nfft:
+        nfft
     return:
     """
     # bin = sample_rate/2 / nfft/2=sample_rate/nfft    # 每个频点的频率数
@@ -185,18 +179,19 @@ def fft2bark(fft, fs=16000, nfft=512):
     """ 
     function：FFT频点 to Bark频率 
     para:
-        fft:
+        fft
         fs：采样率
-        nfft：
+        nfft
     """
     return hz2bark((fft * fs) / (nfft + 1))
 
 def Fm(fb, fc):
     """ 
     计算一个特定的中心频率的Bark filter
-    :param fb: frequency in Bark.
-    :param fc: center frequency in Bark.
-    :return: 相关的Bark filter 值/幅度
+    para：
+        fb: frequency in Bark.
+        fc: center frequency in Bark.
+    return: 相关的Bark filter 值/幅度
     """
     if fc - 2.5 <= fb <= fc - 0.5:
         return 10 ** (2.5 * (fb - fc + 0.5))
@@ -254,65 +249,4 @@ def bark_filter_banks(nfilts=20, nfft=512, fs=16000, low_freq=0, high_freq=None,
             fbank[i, j] = c * Fm(fb, fc)
     return np.abs(fbank)
 
-if __name__=="__main__":
-    # 提取语谱图
-    path=r"要进行特征抽取的音频路径" # 要进行操作的语音的路径
-    # 此处需要读取音频
-    # data,fs,_= wavfile.read(path)# fs是wav文件的采样率，signal是wav文件的内容，filename是要读取的音频文件的路径
-    # fs, data = wavfile.read(path)
-    # data = data[0: int(10 * fs)] # 保留前10s数据 不理解，为什么加了这一句之后就不会报错：
-    while True:
-        c=int(input("输入1提取语谱图；输入2提取fbank；输入3提取mfcc；输入其他停止程序："))
-        # c=2
-        fs, data = wavfile.read(path)
-        if c==1:
-        # 语谱图(spectrogram)：输入语音，预加重，分帧，加窗，FFT，幅值平方，对数功率 
-            step1   =   pre_emphasis(data) # 预加重
-            step2   =   framing(step1,fs) # 分帧
-            step3   =   add_window(step2,fs) # 加窗
-            step4   =   my_fft(step3) # FFT
-            step5   =   stft(step4) # 幅值平方
-            spectrogram =   log_pow(step5) # 对数功率
-            plt.figure(figsize=(20, 5))
-            plt.plot(spectrogram)
-            plt.grid()  
-            plt.title("spectrogram")
-            plt.show()
-        elif c==2:    
-        # 提取fbank：输入语音，预加重，分帧，加窗，FFT，幅值平方，mel滤波器，对数功率
-            step1   =   pre_emphasis(data) # 预加重
-            step2   =   framing(step1,fs) # 分帧
-            step3   =   add_window(step2,fs) # 加窗
-            step4   =   my_fft(step3) # FFT
-            step5   =   stft(step4) # 幅值平方
-            step6   =   mel_filter(step5, fs) # mel滤波
-            fbank   =   log_pow(step6) # 对数功率
-            plt.figure(figsize=(20, 5))
-            plt.plot(fbank)
-            plt.grid()  
-            plt.title("fbank") # 画图发现确实fbank比语谱图干净多了
-            plt.show()
-        elif c==3:
-        # 提取mfcc：输入语音，预加重，分帧，加窗，FFT，幅值平方，mel滤波器，对数功率，离散余弦变换
-            step1   =   pre_emphasis(data) # 预加重
-            step2   =   framing(step1,fs) # 分帧
-            step3   =   add_window(step2,fs) # 加窗
-            step4   =   my_fft(step3) # FFT
-            step5   =   stft(step4) # 幅值平方
-            step6   =   mel_filter(step5, fs) # mel滤波
-            step7   =   log_pow(step6) # 对数功率
-            mfcc    =   discrete_cosine_transform(step7)
-            plt.figure(figsize=(20, 5))
-            plt.plot(mfcc)
-            plt.grid()  
-            plt.title("mfcc") # 相比与fbank更加规整了
-            plt.show()
-        elif c==4:
-        # 提取PLP：输入语音，预加重，分帧，加窗，FFT，幅值平方，bark滤波器，等响度预加重，强度-响度转换，逆傅里叶变换，线性预测
-            print("使用spafe/features/test_bywsy.py进行测试")
-
-        elif c==5:
-        # 提取 CQCC:输入语音，预加重，分帧，加窗，CQT，幅值平方对数功率，均匀采样，离散余弦变换
-            print("使用spafe/features/test_bywsy.py进行测试")
-        else:
-            break
+# 读取音频文件，可参考librosa，soundfile，wavefile包的使用

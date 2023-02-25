@@ -9,10 +9,10 @@
 import numpy as np
 from scipy.fftpack import dct
 from scipy.signal import resample
-from utils.spectral import compute_constant_qtransform
-from utils.cepstral import normalize_ceps, lifter_ceps
-from utils.exceptions import ParameterError, ErrorMsgs
-from utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
+from ..utils.spectral import compute_constant_qtransform
+from ..utils.cepstral import normalize_ceps, lifter_ceps
+from ..utils.exceptions import ParameterError, ErrorMsgs
+from ..utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
 
 
 def cqt_spectrogram(

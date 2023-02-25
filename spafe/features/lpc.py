@@ -8,8 +8,8 @@
 """
 import scipy
 import numpy as np
-from utils.cepstral import normalize_ceps, lifter_ceps
-from utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
+from ..utils.cepstral import normalize_ceps, lifter_ceps
+from ..utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
 
 
 def __lpc_helper(frame, order):

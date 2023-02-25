@@ -7,9 +7,9 @@
 
 """
 import numpy as np
-from utils.filters import scale_fbank
-from utils.converters import hz2bark, bark2hz
-from utils.exceptions import ParameterError, ErrorMsgs
+from ..utils.filters import scale_fbank
+from ..utils.converters import hz2bark, bark2hz
+from ..utils.exceptions import ParameterError, ErrorMsgs
 
 
 def Fm(fb, fc):

@@ -7,7 +7,7 @@
 
 """
 import numpy as np
-from utils.exceptions import ParameterError, ErrorMsgs
+from .exceptions import ParameterError, ErrorMsgs
 
 # init vars
 F0 = 0

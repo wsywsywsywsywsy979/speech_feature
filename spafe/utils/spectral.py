@@ -8,7 +8,7 @@
 """
 import numpy as np
 from scipy.sparse import csr_matrix
-from utils.preprocessing import windowing
+from .preprocessing import windowing
 
 
 def compute_constant_qtransform(

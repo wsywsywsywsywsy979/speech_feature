@@ -7,23 +7,14 @@
 
 """
 import numpy as np
-#--------wsy add and fix------
-import sys
-sys.path.append(r"spafe的路径") # 需要将spafe的绝对路径增加到系统路径中，否则代码跑不起来，其余特征可仿照此样例修改
-print(sys.path)    
-from utils.filters import rasta_filter
-from features.lpc import __lpc_helper, lpc2lpcc
-from fbanks.bark_fbanks import bark_filter_banks
-from utils.cepstral import normalize_ceps, lifter_ceps
-from utils.exceptions import ParameterError, ErrorMsgs
-from utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
+#--------wsy add and fix------ 
+from ..utils.filters import rasta_filter
+from ..features.lpc import __lpc_helper, lpc2lpcc
+from ..fbanks.bark_fbanks import bark_filter_banks
+from ..utils.cepstral import normalize_ceps, lifter_ceps
+from ..utils.exceptions import ParameterError, ErrorMsgs
+from ..utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
 #-------------------
-# from utils.filters import rasta_filter
-# from ..features.lpc import __lpc_helper, lpc2lpcc
-# from ..fbanks.bark_fbanks import bark_filter_banks
-# from utils.cepstral import normalize_ceps, lifter_ceps
-# from utils.exceptions import ParameterError, ErrorMsgs
-# from utils.preprocessing import pre_emphasis, framing, windowing, zero_handling
 
 
 def __rastaplp(

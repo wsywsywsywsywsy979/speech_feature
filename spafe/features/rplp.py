@@ -53,7 +53,7 @@ def __rastaplp(
         win_len           (float) : window length in sec.
                                     (Default is 0.025).
         win_hop           (float) : step between successive windows in sec.
-                                    (Default is 0.01).
+                                    (Default is 0.01). # 一般=win_len/2
         win_type          (float) : window type to apply for the windowing.
                                     (Default is "hamming").
         do_rasta           (bool) : apply Rasta filtering if True.
@@ -94,7 +94,7 @@ def __rastaplp(
     if nfilts < num_ceps:
         raise ParameterError(ErrorMsgs["nfilts"])
 
-    #  compute fbanks 计算滤波器组，所以刚才看的不算白费
+    #  compute fbanks 
     if fbanks is None:
         bark_fbanks_mat, _ = bark_filter_banks(
             nfilts=nfilts, # 24
@@ -153,7 +153,7 @@ def __rastaplp(
     # ifft 逆傅里叶变换
     inverse_fourrier_transform = np.absolute(np.fft.ifft(L, nfft))
 
-    # compute lpcs and lpccs 线性预测（lpc，所以一切都不会白看)
+    # compute lpcs and lpccs 线性预测（lpc)
     lpcs = np.zeros((L.shape[0], order))
     lpccs = np.zeros((L.shape[0], order))
     for i in range(L.shape[0]):

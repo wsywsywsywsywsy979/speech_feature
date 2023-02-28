@@ -267,10 +267,10 @@ def cqcc(
         nfft=nfft, # 512
         low_freq=low_freq, # 0
         high_freq=high_freq, # None
-        number_of_octaves=number_of_octaves, # 7 金字塔个数？
+        number_of_octaves=number_of_octaves, # 7 金字塔个数
         number_of_bins_per_octave=number_of_bins_per_octave, # 24每个金字塔层的bin数目
         spectral_threshold=spectral_threshold, # 0.005
-        f0=f0, # 120 基频？
+        f0=f0, # 120 基频
         q_rate=q_rate, # 1.0 ?
     )
 

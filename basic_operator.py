@@ -89,7 +89,7 @@ def stft(frame_sig, nfft=512):
     frame_pow = (frame_mag ** 2) * 1.0 / nfft # 取平方 
     return frame_pow
 
-def mel_filter(frame_pow, fs, n_filter=40, nfft=512):    
+def mel_filter(frame_pow, fs, n_filter=80, nfft=512):    
     """
     function:mel 滤波器系数计算
     para:
@@ -285,7 +285,7 @@ def plot_spectrogram(spec, ylabel,png_name):
     fig = plt.figure(figsize=(10, 5))
     heatmap = plt.pcolor(spec)
     fig.colorbar(mappable=heatmap)
-    plt.xlabel('Time(s)')
+    plt.xlabel('Frame(s)')
     plt.ylabel(ylabel)
     plt.tight_layout()
     plt.savefig(png_name)

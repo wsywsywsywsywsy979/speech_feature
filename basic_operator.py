@@ -291,3 +291,9 @@ def plot_spectrogram(spec, ylabel,png_name):
     plt.savefig(png_name)
     plt.show()
 # 读取音频文件，可参考librosa，soundfile，wavefile包的使用
+
+#--------------补上缺少的代码---------------------
+def equal_loudness(x):   
+    return ((x**2+56.8e6)*x**4)/((x**2+6.3e6)**2*(x**2+3.8e8))
+
+#-----------------------------------------------

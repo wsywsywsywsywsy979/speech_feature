@@ -187,4 +187,7 @@ def show_features(feats, title, ylabel, xlabel, figsize=(14, 4), cmap="jet"):
     plt.title(title)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
+    #------wsy add---------
+    plt.savefig("plp.png")
+    #-------------------
     plt.show(block=False)

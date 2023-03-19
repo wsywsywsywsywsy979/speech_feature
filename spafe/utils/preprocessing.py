@@ -10,6 +10,27 @@ import numpy as np
 import scipy.ndimage
 from .exceptions import ParameterError, ErrorMsgs
 
+#-----------wsy add-------------------
+from typing_extensions import Literal
+from dataclasses import dataclass
+WindowType = Literal["hanning", "bartlet", "kaiser", "blackman", "hamming"]
+@dataclass
+class SlidingWindow:
+    """
+    Sliding widow class.
+    Args:
+        win_len (float) : window length in sec.
+                          (Default is 0.025).
+        win_hop (float) : step between successive windows in sec.
+                          (Default is 0.01).
+        win_type (float) : window type to apply for the windowing.
+                          (Default is "hamming").
+    """
+
+    win_len: float = 0.025
+    win_hop: float = 0.010
+    win_type: WindowType = "hamming"
+#--------------------------------------------
 
 def zero_handling(x):
     """
